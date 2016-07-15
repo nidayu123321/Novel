@@ -13,12 +13,6 @@ public class FileUtil {
         return readFile(filePath, "utf-8");
     }
 
-    /**
-     * ��ȡ�ļ�
-     * @param filePath
-     * @param charset
-     * @return
-     */
     public static String readFile(String filePath, String charset){
         String ret = null;
         try {
@@ -40,30 +34,19 @@ public class FileUtil {
         return ret;
     }
 
-    /**
-     * д���ļ�
-     * @param filePath
-     * @param info
-     */
     public static void writeFile (String filePath, String info) throws Exception{
         File fp = new File(filePath.substring(0, filePath.lastIndexOf("/")-1));
-        // ����Ŀ¼
         if (!fp.exists()) {
-            fp.mkdirs();// Ŀ¼�����ڵ�����£�����Ŀ¼��
+            fp.mkdirs();
         }
         FileWriter fw = new FileWriter(filePath);
         BufferedWriter bw = new BufferedWriter(fw);
         bw.write(info);
-        // ���ر��򲻻�д��
         bw.close();
         fw.close();
     }
 
-    /**
-     * ����InputStream���͵�ͼƬ��֤��
-     * @param filePath
-     * @param inputStream
-     */
+
     public static void downloadImg(String filePath, InputStream inputStream){
         File file=new File(filePath);
         OutputStream os=null;
