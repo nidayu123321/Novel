@@ -88,6 +88,7 @@ public class DingDian extends HttpClientFactory {
                         {"Upgrade-Insecure-Requests", "1"},
                         {"Connection", "keep-alive"}
                 };
+                href = href.substring(href.lastIndexOf("/") + 1);
                 response = getUrl(url+href, headers, "gbk");
                 if (response == null){
                     return;
@@ -128,14 +129,15 @@ public class DingDian extends HttpClientFactory {
     }
 
     public static void main(String[] args){
-//        String url = "http://www.23wx.com/html/10/10815/"; //裁决
-        String url = "http://www.23wx.com/html/15/15069/"; //飞天
-        String chapter = "第一八四零章";
+        String url = "http://www.23wx.com/html/54/54883/";
+//        String url = "http://www.23wx.com/html/15/15069/"; //飞天
+//        String url = "http://www.23wx.com/html/58/58671/"; //龙王传说
+        String chapter = "第四百二十一章";
 //        String url = "http://www.23wx.com/html/55/55519/"; //雪鹰领主
 //        String chapter = "第23篇 第8章";
         CloseableHttpClient httpClient= getInstance();
         DingDian dingDian = new DingDian(httpClient);
-//        dingDian.searchBook("飞天");
+//        dingDian.searchBook("人道至尊");
         dingDian.getList(url);
 //        dingDian.clawChapter(url, chapter);
 //        dingDian.getPaiHangBang();
