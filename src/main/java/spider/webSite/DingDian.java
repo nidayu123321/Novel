@@ -129,7 +129,7 @@ public class DingDian extends HttpClientFactory {
     }
 
     public static void main(String[] args){
-        String url = "http://www.23wx.com/html/54/54883/";
+        String url = "http://www.23wx.com/html/54/54775/";
 //        String url = "http://www.23wx.com/html/15/15069/"; //飞天
 //        String url = "http://www.23wx.com/html/58/58671/"; //龙王传说
         String chapter = "第四百二十一章";
@@ -137,8 +137,8 @@ public class DingDian extends HttpClientFactory {
 //        String chapter = "第23篇 第8章";
         CloseableHttpClient httpClient= getInstance();
         DingDian dingDian = new DingDian(httpClient);
-//        dingDian.searchBook("人道至尊");
-        dingDian.getList(url);
+        dingDian.searchBook("重生完美时代");
+//        dingDian.getList(url);
 //        dingDian.clawChapter(url, chapter);
 //        dingDian.getPaiHangBang();
     }

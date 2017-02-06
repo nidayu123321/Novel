@@ -83,7 +83,7 @@ public class BiQuGe extends HttpClientFactory {
 //        String chapter = "第一百九十五";
 
         String url = "http://www.biquge.tw/64_64451/";
-        String chapter = "第二百九十二章";
+        String chapter = "第七百八十八章";
 
 //        biQuGe.searchBook("重生完美时代");
 //        biQuGe.getList(url);
