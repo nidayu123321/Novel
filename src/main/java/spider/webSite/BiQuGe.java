@@ -5,6 +5,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import spider.HttpClientFactory;
+import util.FileUtil;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -19,17 +20,20 @@ public class BiQuGe extends HttpClientFactory {
 
     private final int pageSize = 50;
 
+    private final String firstPre = "http://www.xinbqg.la/";
+
     public BiQuGe(CloseableHttpClient httpClient){
         this.httpClient = httpClient;
     }
 
     private void clawChapter(String url, String chapter){
-        String response = getUrl(url);
+        String response = getUrl(url, null, "utf-8");
         String href = Jsoup.parse(response).select("a").stream().filter(a -> a.text().contains(chapter)).findFirst()
                 .map(a -> a
                         .attr("href")).get();
-        String nextUrl = "http://www.biquge.tw" + href;
-        response = getUrl(nextUrl);
+        String nextUrl = firstPre + href;
+        response = getUrl(nextUrl, null, "utf-8");
+//        print(response);
         parseText(url, response, 1);
     }
 
@@ -43,6 +47,7 @@ public class BiQuGe extends HttpClientFactory {
                 e.printStackTrace();
             }
         }
+//        print(response);
         Document doc = Jsoup.parse(response);
         if (doc.select("#content")!=null){
             String bookText = doc.select("#content").text();
@@ -52,24 +57,32 @@ public class BiQuGe extends HttpClientFactory {
                 int temp = text.length() / pageSize;
                 for (int j = 0; j<= temp; j++){
                     if (j == temp) {
-                        print(text.substring(pageSize * j, text.length()));
+                        String info = text.substring(pageSize * j, text.length());
+                        if (!"　　".equals(info.trim())){
+                            print(info);
+                        }
                     }else{
-                        print(text.substring(pageSize * j, pageSize * (j+1)));
+                        String info = text.substring(pageSize * j, pageSize * (j+1));
+                        if (!"　　".equals(info.trim())){
+                            print(info);
+                        }
                     }
                 }
-
             }
-            if (doc.select("#pager_next")!=null){
-                String nextUrl = doc.select("#pager_next").attr("href");
-                response = getUrl(url+nextUrl);
+            if (response != null && response.contains("下一章")){
+                String href = Jsoup.parse(response).select("a").stream().filter(a -> a.text().contains("下一章")).findFirst()
+                        .map(a -> a.attr("href")).get();
+                String nextUrl = firstPre + href;
+                response = getUrl(nextUrl, null, "utf-8");
                 parseText(url, response, index+1);
             }
         }
     }
 
     private void getList(String url){
-        String response = getUrl(url);
-        Elements as = Jsoup.parse(response).select("dd a");
+        String response = getUrl(url, null, "utf-8");
+        print(response);
+        Elements as = Jsoup.parse(response).select("#list a");
         for (int i = 0; i < as.size(); i ++){
             print(as.get(i).text());
         }
@@ -77,30 +90,48 @@ public class BiQuGe extends HttpClientFactory {
 
 
     public static void main(String[] args){
-        CloseableHttpClient httpClient= getInstance();
+        CloseableHttpClient httpClient = getInstance();
         BiQuGe biQuGe = new BiQuGe(httpClient);
-//        String url = "http://www.biquge.tw/0_498/"; //君临
-//        String chapter = "第一百九十五";
 
-        String url = "http://www.biquge.tw/64_64451/";
-        String chapter = "第七百八十八章";
-
-//        biQuGe.searchBook("重生完美时代");
+        String url = "http://www.xinbqg.la/62/62042/"; // 苟在。。。
+//        url = "http://www.qu-la.com/booktxt/24447310116/"; //似水流年
+//        url = "http://www.xinbqg.la/112/112806/"; // 神话纪元
+        url = "http://www.xinbqg.la/114/114397/"; // 都重生了
+//        url = "http://www.xinbqg.la/2/2302/"; // 四万年
+        url = "http://www.xinbqg.la/118/118662/";
+        String chapter = "第213";
+//        chapter = "第一百八十八章";
+//        biQuGe.searchBook("重生之似水流年");
 //        biQuGe.getList(url);
         biQuGe.clawChapter(url, chapter);
 //        biQuGe.getPaiHangBang();
 
+//        String text = FileUtil.readFile("/Users/nidayu/Documents/workspace/自己测试文本/b.html");
+//        biQuGe.printText(text);
     }
 
-    // 搜索小说链接
+    private void printText(String text){
+        int temp = text.length() / pageSize;
+        for (int j = 0; j<= temp; j++){
+            if (j == temp) {
+                String info = text.substring(pageSize * j, text.length());
+                print(info);
+            }else{
+                String info = text.substring(pageSize * j, pageSize * (j+1));
+                print(info);
+            }
+        }
+    }
+
     private void searchBook(String bookName){
         try {
-            bookName = URLEncoder.encode(bookName, "utf-8");
+            bookName = URLEncoder.encode(bookName, "gbk");
         }catch (Exception e){
             e.printStackTrace();
         }
-        String source = "http://zhannei.baidu.com/cse/search?s=16829369641378287696&q=" +bookName+
-                "&isNeedCheckDomain=1&jump=1";
+        String source = "http://zhannei.baidu.com/cse/search?ie=gbk&s=2758772450457967865&q=" + bookName;
+//        String source = "http://zhannei.baidu.com/cse/search?s=16829369641378287696&q=" +bookName+
+//                "&isNeedCheckDomain=1&jump=1";
         print(getUrl(source));
     }
 

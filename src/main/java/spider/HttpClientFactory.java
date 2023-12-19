@@ -182,7 +182,7 @@ public class HttpClientFactory {
             RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(80000).setConnectTimeout(50000).build();
             httpget.setConfig(requestConfig);
 
-            System.out.println("executing request " + httpget.getURI());
+//            System.out.println("executing request " + httpget.getURI());
             context = new BasicHttpContext();
             response = httpClient.execute(httpget);
             try {
