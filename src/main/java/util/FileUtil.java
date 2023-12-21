@@ -1,6 +1,8 @@
 package util;
 
 import java.io.*;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * @author nidayu
@@ -70,6 +72,9 @@ public class FileUtil {
     }
 
     public static void main(String[] args){
-
+        Path pd = Paths.get("src","data", "spider.txt");
+        String text = FileUtil.readFile(pd.toAbsolutePath().toString());
+        String[] urls = text.split("\n");
+        System.out.println(urls.length + urls[0]);
     }
 }
